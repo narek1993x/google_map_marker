@@ -1,0 +1,50 @@
+.search-form
+  position absolute
+  z-index 99
+  top 0
+  left calc(50% - 100px)
+  .form-group
+    display flex
+    align-items center
+    float left !important
+    transition all 0.35s, border-radius 0s
+    width 32px
+    height 32px
+    margin 10px 0 8px 4px
+    background-color #fff
+    box-shadow 0 1px 1px rgba(0, 0, 0, 0.075) inset
+    border-radius 25px
+    border 1px solid #ccc
+    input
+      &.form-control
+        padding-left 20px
+        border 0 none
+        background transparent
+        box-shadow none
+        display block
+        &::-webkit-input-placeholder
+            display none
+        &:-moz-placeholder
+            display none
+        &::-moz-placeholder
+            display none
+        &:-ms-input-placeholder
+            display none
+    span
+      &.form-control-feedback
+        position absolute
+        top -2.2px
+        z-index 2
+        display block
+        width 34px
+        height 34px
+        line-height 34px
+        text-align center
+        color #3596e0
+        left initial
+        font-size 14px
+
+.search-form .form-group:hover,
+.search-form .form-group.hover
+  width 200px
+  border-radius 25px
