@@ -190,5 +190,5 @@ class App extends Component {
 }
 
 export default GoogleApiWrapper({
-  apiKey: 'YOUR_GOOGLE_MAP_API_KEY'
+  apiKey: 'AIzaSyDRllCDx4J7LX1bXCbtpMIYnwFlSm0JCUo'
 })(App);
