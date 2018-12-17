@@ -51,8 +51,8 @@ export default class AddMarkerPopup extends Component {
         <div className='button-wrapper'>
           <p>Add marker here?</p>
           <div>
-            <button type="button" className="btn btn-info" onClick={this.showInputHandler}>Yes</button>
-            <button type="button" className="btn btn-light" onClick={this.hidePopupHanler}>No</button>
+            <button type="button" className="btn btn-primary" onClick={this.showInputHandler}>Yes</button>
+            <button type="button" className="btn btn-warning" onClick={this.hidePopupHanler}>No</button>
           </div>
         </div>
       )

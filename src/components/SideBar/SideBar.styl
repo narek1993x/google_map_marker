@@ -1,16 +1,43 @@
 .sideBar
-  position absolute
+  position fixed
+  left: 0;
+  top: 0;
   z-index 99
   display flex
-  justify-content center
+  align-items: center
+  flex-direction: column
   width 20%
   height 100%
   background-color #421F00
-  li
-    display flex
-    justify-content space-around
-    align-items center
-    width 150px
-    height 30px
-    p
-      margin 0
+  color white
+  box-sizing: border-box;
+  transition: transform 0.3s ease-out;
+  &.open
+    transform: translateX(0)
+  &.close
+    transform: translateX(-100%)
+  .leftArrow
+    align-self: flex-end;
+  .markers
+    margin-top 50px
+    li
+      display flex
+      justify-content space-between
+      align-items center
+      width 350px
+      height 40px
+      margin-bottom 1px
+      color black
+      cursor pointer
+      &.complete
+        p
+          text-decoration: line-through;
+          color rgb(153, 153, 153)
+      .toggles
+        display flex
+        align-items center
+        button
+          font-size 10px
+          margin-right 5px
+      p
+        margin 0

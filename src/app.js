@@ -19,7 +19,8 @@ class App extends Component {
     markerPopupPosition: {},
     markerPosition: {},
     showMarkerPopup: false,
-    filterText: ''
+    filterText: '',
+    showSideBar: true
   }
 
   componentDidMount(){
@@ -74,7 +75,9 @@ class App extends Component {
       {
         title,
         name: title,
-        position: { lat, lng }
+        position: { lat, lng },
+        showOnMap: true,
+        complete: false
       }
     ];
     if (e.keyCode === 13) {
@@ -83,14 +86,34 @@ class App extends Component {
         markers: prevState.markers.concat(newMarker)
       }))
     }
-  }
+  } 
   
   onFilterHandler = (e) => {
     this.setState({ filterText: e.target.value });
   }
 
-  onCloseMarkerPopup = () => {
-    this.setState({ showMarkerPopup: false });
+  onEditHandler = (e, index, isComplete) => {
+    e.stopPropagation();    
+    const markers = [...this.state.markers];
+    const newMarker = {
+      ...markers[index],
+      ...(!isComplete ? { showOnMap: !markers[index].showOnMap } : {}),
+      ...(isComplete ? { complete: !markers[index].complete } : {})
+    }
+    const newMarkers = [...markers.slice(0, index), newMarker, ...markers.slice(index+1)];
+    this.setState({ markers: newMarkers })
+  }
+
+  onRemoveHandler = (e, index) => {
+    e.stopPropagation();
+    const markers = [...this.state.markers];
+    const newMarkers = [...markers.slice(0, index), ...markers.slice(index+1)];
+    this.setState({ markers: newMarkers })
+  }
+
+  onCloseMarkerPopup = () => this.setState({ showMarkerPopup: false })
+  onSideBarHandler = () => {
+    this.setState(prevState => ({ showSideBar: !prevState.showSideBar }))
   }
 
   clearActiveMarker = () => {
@@ -119,20 +142,26 @@ class App extends Component {
       selectedPlace,
       markerPopupPosition,
       showMarkerPopup,
-      filterText
+      filterText,
+      showSideBar
     } = this.state;
     let { markers } = this.state;
     
     if (filterText) {
-      markers = markers.filter(marker => marker.name.toLowerCase().includes(filterText.toLowerCase()))
+      markers = markers.filter(({ name, showOnMap }) => name.toLowerCase().includes(filterText.toLowerCase()))
     }
     if (loadInitialPosition) return <div />;
 
     return (
       <div className='App'>
-        <SearchBar onFilter={this.onFilterHandler} />
+        {!showSideBar && <span className='glyphicon glyphicon-arrow-right rigthArrow' onClick={this.onSideBarHandler} /> }  
         <SideBar
           markers={markers}
+          onEdit={this.onEditHandler}
+          onFilter={this.onFilterHandler}
+          onRemove={this.onRemoveHandler}
+          onClosed={this.onSideBarHandler}
+          open={showSideBar}
         />
         {showMarkerPopup && (
           <AddMarkerPopup
@@ -148,7 +177,7 @@ class App extends Component {
           zoom={14}
         >
           <Marker onClick={this.onMarkerClick} name={'Current location'} />
-          {markers.map(this.renderMarkers)}
+          {markers.filter(({ showOnMap }) => showOnMap).map(this.renderMarkers)}
           <InfoWindow marker={activeMarker} visible={showingInfoWindow} onClose={this.clearActiveMarker}>
             <div>
               <h1>{selectedPlace.name}</h1>
