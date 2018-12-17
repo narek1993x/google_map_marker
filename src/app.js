@@ -51,8 +51,8 @@ class App extends Component {
   onMapClicked = (props, a, { latLng, pixel }) => {
     this.setState({
       markerPopupPosition: {
-        top: pixel.y + 10,
-        left: pixel.x - 82
+        top: pixel.y + 15,
+        left: pixel.x - 92
       },
       markerPosition: { lat: latLng.lat(), lng: latLng.lng() },
       showMarkerPopup: true
@@ -69,7 +69,7 @@ class App extends Component {
       showingInfoWindow: true
     })
 
-  onAddMarker = (e, title) => {
+  onAddMarker = (e, title, fromButton) => {
     const { markerPosition: { lat, lng }} = this.state
     const newMarker = [
       {
@@ -80,7 +80,7 @@ class App extends Component {
         complete: false
       }
     ];
-    if (e.keyCode === 13) {
+    if ((e.keyCode === 13 || fromButton) && title) {
       this.setState(prevState => ({
         showMarkerPopup: false, 
         markers: prevState.markers.concat(newMarker)

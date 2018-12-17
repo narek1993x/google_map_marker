@@ -39,6 +39,7 @@ export default class AddMarkerPopup extends Component {
             onChange={this.onTitleChangeHandler}
             onKeyDown={e => onEnter(e, markerTitle)}
           />
+          <button className='btn btn-primary' onClick={(e) => onEnter(e, markerTitle, true)}>Add</button>
           <span
             className='cross'
             onClick={this.hidePopupHanler}>
