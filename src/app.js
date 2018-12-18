@@ -2,7 +2,18 @@ import React, { Component } from 'react';
 import { Map, InfoWindow, Marker, GoogleApiWrapper } from 'google-maps-react';
 import AddMarkerPopup from './components/AddMarkerPopup';
 import SideBar from './components/SideBar';
-import SearchBar from './components/SearchBar';
+
+function saveMarkers(markers) {
+  localStorage.setItem('markers', JSON.stringify(markers));
+}
+
+function getSavedMarkers() {
+  const markers = localStorage.getItem('markers');
+  if (markers) {
+    return JSON.parse(markers);
+  }
+  return [];
+}
 
 
 class App extends Component {
@@ -15,12 +26,12 @@ class App extends Component {
     activeMarker: {},
     selectedPlace: {},
     loadInitialPosition: false,
-    markers: [],
+    markers: getSavedMarkers(),
     markerPopupPosition: {},
     markerPosition: {},
     showMarkerPopup: false,
     filterText: '',
-    showSideBar: true
+    showSideBar: false
   }
 
   componentDidMount(){
@@ -81,10 +92,11 @@ class App extends Component {
       }
     ];
     if ((e.keyCode === 13 || fromButton) && title) {
-      this.setState(prevState => ({
-        showMarkerPopup: false, 
-        markers: prevState.markers.concat(newMarker)
-      }))
+      this.setState(prevState => {
+        const markers = prevState.markers.concat(newMarker);
+        saveMarkers(markers);
+        return { showMarkerPopup: false, markers };
+      })
     }
   } 
   
@@ -101,6 +113,7 @@ class App extends Component {
       ...(isComplete ? { complete: !markers[index].complete } : {})
     }
     const newMarkers = [...markers.slice(0, index), newMarker, ...markers.slice(index+1)];
+    saveMarkers(newMarkers);
     this.setState({ markers: newMarkers })
   }
 
@@ -108,6 +121,7 @@ class App extends Component {
     e.stopPropagation();
     const markers = [...this.state.markers];
     const newMarkers = [...markers.slice(0, index), ...markers.slice(index+1)];
+    saveMarkers(newMarkers);
     this.setState({ markers: newMarkers })
   }
 
@@ -148,7 +162,7 @@ class App extends Component {
     let { markers } = this.state;
     
     if (filterText) {
-      markers = markers.filter(({ name, showOnMap }) => name.toLowerCase().includes(filterText.toLowerCase()))
+      markers = markers.filter(({ name }) => name.toLowerCase().includes(filterText.toLowerCase()))
     }
     if (loadInitialPosition) return <div />;
 
@@ -190,5 +204,5 @@ class App extends Component {
 }
 
 export default GoogleApiWrapper({
-  apiKey: 'YOUR_GOOGLE_API_KEY'
+  apiKey: 'YOUR_API_KEY'
 })(App);
