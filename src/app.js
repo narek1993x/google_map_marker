@@ -34,8 +34,14 @@ class App extends Component {
     showSideBar: false
   }
 
-  componentDidMount(){
+  componentDidMount() {
     this.getInitialLocation();
+    window.addEventListener('wheel', this.onCloseMarkerPopup);
+    this.removeZoomHandler();
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('wheel', this.onCloseMarkerPopup);
   }
 
   getInitialLocation = async () => {
@@ -130,6 +136,22 @@ class App extends Component {
     this.setState(prevState => ({ showSideBar: !prevState.showSideBar }))
   }
 
+  removeZoomHandler = () => {
+    const getZoomButtons = () => {
+      setTimeout(() => {
+        const elements = document.getElementsByClassName('gmnoprint');
+        if (elements) {
+          for (let element of elements) {
+            element.remove();
+          }
+        } else {
+          getZoomButtons()
+        }
+      }, 1000)
+    }
+    getZoomButtons();
+  }
+
   clearActiveMarker = () => {
     this.setState({
       showingInfoWindow: false,
@@ -188,6 +210,7 @@ class App extends Component {
           initialCenter={initialCenter}
           google={this.props.google}
           onClick={this.onMapClicked}
+          onDragend={this.onCloseMarkerPopup}
           zoom={14}
         >
           <Marker onClick={this.onMarkerClick} name={'Current location'} />
