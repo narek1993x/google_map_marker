@@ -36,8 +36,8 @@ class App extends Component {
 
   componentDidMount() {
     this.getInitialLocation();
-    window.addEventListener('wheel', this.onCloseMarkerPopup);
     this.removeZoomHandler();
+    window.addEventListener('wheel', this.onCloseMarkerPopup);
   }
 
   componentWillUnmount() {
@@ -137,19 +137,16 @@ class App extends Component {
   }
 
   removeZoomHandler = () => {
-    const getZoomButtons = () => {
-      setTimeout(() => {
-        const elements = document.getElementsByClassName('gmnoprint');
-        if (elements) {
-          for (let element of elements) {
-            element.remove();
-          }
-        } else {
-          getZoomButtons()
+    setTimeout(() => {
+      const elements = document.getElementsByClassName('gmnoprint');
+      if (elements.length > 0) {
+        for (let element of elements) {
+          element.remove();
         }
-      }, 1000)
-    }
-    getZoomButtons();
+      } else {
+        this.removeZoomHandler()
+      }
+    }, 1000)
   }
 
   clearActiveMarker = () => {
